@@ -50,6 +50,7 @@ public final class ImmediateScheduler extends Scheduler {
             // since we are executing immediately on this thread we must cause this thread to sleep
             long execTime = ImmediateScheduler.this.now() + unit.toMillis(delayTime);
 
+            // 鉴于是 Schedulers.immediate()，所以需要立刻在当前线程中操作，因有延迟故需要将该线程在延迟时间内进行堵塞
             return schedule(new SleepingAction(action, this, execTime));
         }
 

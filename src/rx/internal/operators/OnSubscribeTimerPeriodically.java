@@ -45,11 +45,11 @@ public final class OnSubscribeTimerPeriodically implements OnSubscribe<Long> {
         final Worker worker = scheduler.createWorker();
         child.add(worker);
         worker.schedulePeriodically(new Action0() {
-            long counter;
+            long counter; // 初始一个为 0 的整数
             @Override
             public void call() {
                 try {
-                    child.onNext(counter++);
+                    child.onNext(counter++); // 每次发送给下游的数值都是该整数 + 1
                 } catch (Throwable e) {
                     try {
                         worker.unsubscribe();

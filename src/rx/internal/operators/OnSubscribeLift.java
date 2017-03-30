@@ -34,10 +34,11 @@ public final class OnSubscribeLift<T, R> implements OnSubscribe<R> {
     final Operator<? extends R, ? super T> operator;
 
     public OnSubscribeLift(OnSubscribe<T> parent, Operator<? extends R, ? super T> operator) {
-        this.parent = parent;
+        this.parent = parent; // 传入的 OnSubscribe 即为其上流传递过来的 OnSubscribe
         this.operator = operator;
     }
 
+    // 当前传入的 Subscriber 即为最终的 Observable.subscribe() 传入的 Subscriber
     @Override
     public void call(Subscriber<? super R> o) {
         try {
@@ -45,7 +46,7 @@ public final class OnSubscribeLift<T, R> implements OnSubscribe<R> {
             try {
                 // new Subscriber created and being subscribed with so 'onStart' it
                 st.onStart();
-                parent.call(st);
+                parent.call(st); // 完成订阅关系
             } catch (Throwable e) {
                 // localized capture of errors rather than it skipping all operators
                 // and ending up in the try/catch of the subscribe method which then

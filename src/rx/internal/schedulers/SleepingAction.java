@@ -33,12 +33,14 @@ import rx.functions.Action0;
     @Override
     public void call() {
         if (innerScheduler.isUnsubscribed()) {
+            // 订阅关系取消了，则不再进行堵塞线程的操作
             return;
         }
 
         long delay = execTime - innerScheduler.now();
         if (delay > 0) {
             try {
+                // 根据延迟时间将此线程进行堵塞
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

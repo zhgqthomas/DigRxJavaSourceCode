@@ -71,7 +71,7 @@ public final class OperatorTake<T> implements Operator<T, T> {
 
             @Override
             public void onNext(T i) {
-                if (!isUnsubscribed() && count++ < limit) {
+                if (!isUnsubscribed() && count++ < limit) { // 判断是否达到了限制上限
                     boolean stop = count == limit;
                     child.onNext(i);
                     if (stop && !completed) {
@@ -79,7 +79,7 @@ public final class OperatorTake<T> implements Operator<T, T> {
                         try {
                             child.onCompleted();
                         } finally {
-                            unsubscribe();
+                            unsubscribe(); // 达到上限后，取消所有的订阅关系
                         }
                     }
                 }

@@ -298,6 +298,7 @@ public class Observable<T> {
      * @see <a href="https://github.com/ReactiveX/RxJava/wiki/Implementing-Your-Own-Operators">RxJava wiki: Implementing Your Own Operators</a>
      */
     public final <R> Observable<R> lift(final Operator<? extends R, ? super T> operator) {
+        // 将当前 Observable 的 onSubscribe 传入进行逻辑处理
         return unsafeCreate(new OnSubscribeLift<T, R>(onSubscribe, operator));
     }
 

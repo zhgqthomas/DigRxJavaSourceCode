@@ -69,6 +69,7 @@ public final class SchedulePeriodicHelper {
             long startInNanos = firstStartInNanos;
             @Override
             public void call() {
+                // 调用 OnSubscribeTimerPeriodically 中 call() 的 child.onNext(counter++);
                 action.call();
 
                 if (!mas.isUnsubscribed()) {
@@ -91,6 +92,8 @@ public final class SchedulePeriodicHelper {
                     lastNowNanos = nowNanos;
 
                     long delay = nextTick - nowNanos;
+
+                    // 通过往 schedule 里传入当前 action 达到递归的作用
                     mas.replace(worker.schedule(this, delay, TimeUnit.NANOSECONDS));
                 }
             }
