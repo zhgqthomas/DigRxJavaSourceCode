@@ -10423,6 +10423,7 @@ public class Observable<T> {
         }
 
         // new Subscriber so onStart it
+        // 可以用于做一些准备工作，例如数据的清零或重置, 默认情况下它的实现为空
         subscriber.onStart();
 
         /*
@@ -10432,6 +10433,7 @@ public class Observable<T> {
         // if not already wrapped
         if (!(subscriber instanceof SafeSubscriber)) {
             // assign to `observer` so we return the protected version
+            // 强制转化为 SafeSubscriber 是为了保证 onCompleted 或 onError 调用的时候会中止 onNext 的调用
             subscriber = new SafeSubscriber<T>(subscriber);
         }
 
@@ -10439,7 +10441,10 @@ public class Observable<T> {
         // add a significant depth to already huge call stacks.
         try {
             // allow the hook to intercept and/or decorate
+            // onObservableStart() 默认返回的就是 observable.onSubscribe
             RxJavaHooks.onObservableStart(observable, observable.onSubscribe).call(subscriber);
+
+            // onObservableReturn() 默认也是返回 subscriber
             return RxJavaHooks.onObservableReturn(subscriber);
         } catch (Throwable e) {
             // special handling for certain Throwable/Error/Exception types

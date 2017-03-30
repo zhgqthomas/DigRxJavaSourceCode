@@ -59,7 +59,7 @@ public class SafeSubscriber<T> extends Subscriber<T> {
 
     private final Subscriber<? super T> actual;
 
-    boolean done;
+    boolean done; // 通过改标志来保证 onCompleted 或 onError 调用的时候会中止 onNext 的调用
 
     public SafeSubscriber(Subscriber<? super T> actual) {
         super(actual);
@@ -130,7 +130,7 @@ public class SafeSubscriber<T> extends Subscriber<T> {
     @Override
     public void onNext(T t) {
         try {
-            if (!done) {
+            if (!done) { // done 为 true 时，中止传递
                 actual.onNext(t);
             }
         } catch (Throwable e) {
